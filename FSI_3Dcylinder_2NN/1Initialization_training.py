@@ -366,7 +366,7 @@ def run(cfg: PhysicsNeMoConfig) -> None:
     print("accomplish inlet_constraint :", cfg.batch_size.inlet)
 
     # outlet
-    outflow_var = csv_to_dict(to_absolute_path("surface_vtudata/data_out_xyz0.csv"))
+    outflow_var = csv_to_dict(to_absolute_path("FSI_3Dcylinder_2NN/surface_vtudata/data_out_xyz0.csv"))
     outflow_invar = {key: value for key, value in outflow_var.items() if key in ["x", "y", "z", "t"]}
     outflow_invar = nondimension_invar(outflow_invar, L_scale, t_scale)
     #outflow_invar = normalize_invar(outflow_invar, center, scale, dims=3)
@@ -385,7 +385,7 @@ def run(cfg: PhysicsNeMoConfig) -> None:
 
     # initial
     ms = 0
-    initial_var = csv_to_dict(to_absolute_path("SimVascular/data_initial.csv"))
+    initial_var = csv_to_dict(to_absolute_path("FSI_3Dcylinder_2NN/SimVascular/data_initial.csv"))
     initial_invar = {key: value for key, value in initial_var.items() if key in ["x", "y", "z", "t"]}
     initial_invar = nondimension_invar(initial_invar, L_scale, t_scale)
     #initial_invar = normalize_invar(initial_invar, center, scale, dims=3)
@@ -401,7 +401,7 @@ def run(cfg: PhysicsNeMoConfig) -> None:
     domain_flow.add_constraint(initial, f"initial_{int(ms)}")
 
     # wall (fluid-side boundary data)
-    wall_var = csv_to_dict(to_absolute_path("surface_vtudata/data_wall_xyz0.csv"))
+    wall_var = csv_to_dict(to_absolute_path("FSI_3Dcylinder_2NN/surface_vtudata/data_wall_xyz0.csv"))
     wall_invar = {key: value for key, value in wall_var.items() if key in ["x", "y", "z", "t"]}
     wall_invar = nondimension_invar(wall_invar, L_scale, t_scale)
     #wall_invar = normalize_invar(wall_invar, center, scale, dims=3)
@@ -424,7 +424,7 @@ def run(cfg: PhysicsNeMoConfig) -> None:
     # =========================================
     # Validators & Inferencers (placing them in the flow domain is sufficient)
     # =========================================
-    modsim_var = csv_to_dict(to_absolute_path("SimVascular/data_validator_xyz0.csv"))
+    modsim_var = csv_to_dict(to_absolute_path("FSI_3Dcylinder_2NN/SimVascular/data_validator_xyz0.csv"))
     modsim_invar = {key: value for key, value in modsim_var.items() if key in ["x", "y", "z", "t"]}
     modsim_invar = nondimension_invar(modsim_invar, L_scale, t_scale)
     #modsim_invar_grid = normalize_invar(modsim_invar, center, scale, dims=3)
