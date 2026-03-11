@@ -68,19 +68,19 @@ def run(cfg: PhysicsNeMoConfig) -> None:
 
 
     # physical quantities################################################
-    mu = quantity(0.003, "kg/(m*s)")  # Fluid viscosity
-    rho = quantity(1000, "kg/m^3")    # Fluid Density
-    nu = mu / rho
-    L = quantity(0.05, "m")          # vessel length
-    v_mag = quantity(0.2, "m/s")     # maximum velocity
-    noslip_u = quantity(0.0, "m/s")
-    noslip_v = quantity(0.0, "m/s")
-    outlet_p = quantity(1333.2, "kg/(m*s^2)")
-    time_out = quantity(0.01, "s")
+    mu = quantity(0.003, "kg/(m*s)")  # Fluid viscosity动力粘度
+    rho = quantity(1000, "kg/m^3")    # Fluid Density流体密度
+    nu = mu / rho                     # Kinematic viscosity运动粘度
+    L = quantity(0.05, "m")          # vessel length血管长度
+    v_mag = quantity(0.2, "m/s")     # maximum velocity最大入口速度
+    noslip_u = quantity(0.0, "m/s")  # no-slip boundary condition无滑移边界条件
+    noslip_v = quantity(0.0, "m/s")  # no-slip boundary condition无滑移边界条件
+    outlet_p = quantity(1333.2, "kg/(m*s^2)") # outlet pressure (10 mmHg)出口压力
+    time_out = quantity(0.01, "s")   # total simulation 模拟终止时间
 
-    velocity_scale = quantity(0.08, "m/s")  # prior velocity: 0.08 m/s
-    density_scale = quantity(1000, "kg/m^3")
-    length_scale = quantity(0.01, "m")      # diameter
+    velocity_scale = quantity(0.08, "m/s")  # prior velocity: 0.08 m/s 速度尺度
+    density_scale = quantity(1000, "kg/m^3") # prior density: 1000 kg/m^3 密度尺度
+    length_scale = quantity(0.01, "m")      # diameter长度尺度
 
     nd = NonDimensionalizer(
         length_scale=length_scale,
@@ -162,10 +162,10 @@ def run(cfg: PhysicsNeMoConfig) -> None:
 
 
     # sympy time range
-    t = Symbol("t")
-    time_length = nd.ndim(time_out)
-    time_range = {t: (0, time_length)}
-    time0_range = {t: (0, 0)}
+    t = Symbol("t") #时间符号变量
+    time_length = nd.ndim(time_out) #无量纲化后的最大模拟时间
+    time_range = {t: (0, time_length)} #时间范围从0到time_length（无量纲化后的模拟时间）
+    time0_range = {t: (0, 0)} #定义初始时刻区间
 
     # ===== Create two Domains: one for displacement, one for flow =====
     domain_disp = Domain()
@@ -201,6 +201,7 @@ def run(cfg: PhysicsNeMoConfig) -> None:
         nr_layers=10,
     )
 
+    #让结构网络输出恒为零，即初始时假设没有结构变形，先训练流体网络满足边界条件，再逐步增加结构相关约束训练结构网络
     # ====== zero-initialize and freeze displacement_net; train flow_net only ======
     # set all Linear layer weights and biases to 0 so that eta(x,y,z,t) stays identically 0
     for m in displacement_net.modules():
