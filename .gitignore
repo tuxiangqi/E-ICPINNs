@@ -4,3 +4,7 @@ __pycache__/
 *$py.class
 outputs/
 *.pdf
+
+# IDE and Claude Code settings
+.vscode/
+.claude/
